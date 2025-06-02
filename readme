@@ -1,0 +1,214 @@
+🌐 Social Media Microservices (Node.js)
+
+This project is a scalable social media platform built using a microservice architecture. Each service runs independently and communicates through REST APIs and optionally through RabbitMQ. The platform includes features such as authentication, post management, media uploads, rate limiting, validation, and logging.
+
+🏗️ Tech Stack
+
+Node.js (JavaScript Runtime)
+
+Express.js (API Framework)
+
+MongoDB with Mongoose (Database & ODM)
+
+Cloudinary (Image Hosting)
+
+Multer (File Upload Handling)
+
+Winston (Logging)
+
+Argon2 & bcrypt (Password Hashing)
+
+JWT (Authentication)
+
+Rate Limiting:
+
+express-rate-limit
+
+rate-limit-flexible
+
+Joi (Input Validation)
+
+🧹 Microservices Overview
+
+Service
+
+Description
+
+Port
+
+API Gateway
+
+Routes requests to microservices
+
+3000
+
+Identity Service
+
+Handles user registration & login
+
+3001
+
+Post Service
+
+Create, fetch, delete posts
+
+3002
+
+Media Service
+
+Upload and delete media (Cloudinary + DB)
+
+3003
+
+📁 Folder Structure
+
+social-media-microservices/
+│
+├── api-gateway/
+├── identity-service/
+├── post-service/
+├── media-service/
+└── README.md
+
+⚙️ Features
+
+✅ Authentication (Identity Service)
+
+User signup/login
+
+Password hashing (Argon2 or bcrypt)
+
+JWT-based authentication
+
+Secure routes
+
+📝 Post Service
+
+Create, fetch, delete posts
+
+Link posts with media
+
+Input validation using Joi
+
+🖼️ Media Service
+
+Upload files with Multer
+
+Store in RAM then upload to Cloudinary
+
+Save metadata to MongoDB
+
+Delete from Cloudinary when post is deleted
+
+🚦 Rate Limiting
+
+Use express-rate-limit for basic limits
+
+rate-limit-flexible for Redis or advanced cases
+
+📜 Logging
+
+Logs all events using Winston
+
+Error logging and request tracking
+
+🔐 Environment Variables (Sample)
+
+Each service should have its own .env file. Here's an example for the Media Service:
+
+PORT=3003
+MONGODB_URI=mongodb://localhost:27017/media-service
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+JWT_SECRET=your_jwt_secret
+
+🐳 Docker (Optional)
+
+You can dockerize each service using a simple Dockerfile like:
+
+FROM node:18
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3001
+CMD ["node", "server.js"]
+
+Then build and run using:
+
+docker build -t identity-service .
+docker run -p 3001:3001 identity-service
+
+🚀 Run Locally
+
+Clone the repo
+
+Run MongoDB (locally or via Atlas)
+
+Setup .env files for each service
+
+Start each service:
+
+# API Gateway
+cd api-gateway
+npm install
+node server.js  # runs on port 3000
+
+# Identity Service
+cd ../identity-service
+npm install
+node server.js  # runs on port 3001
+
+# Post Service
+cd ../post-service
+npm install
+node server.js  # runs on port 3002
+
+# Media Service
+cd ../media-service
+npm install
+node server.js  # runs on port 3003
+
+📬 Sample Endpoints
+
+Identity Service
+
+POST /register
+POST /login
+
+Post Service
+
+GET /posts
+POST /posts
+DELETE /posts/:id
+
+Media Service
+
+POST /upload (multipart/form-data, field: "file")
+DELETE /media/:id
+
+API Gateway
+
+Routes to respective services
+
+Use tools like:
+
+Postman
+
+📦 Future Improvements
+
+Add RabbitMQ for async operations (e.g., media cleanup)
+
+Add Redis for caching + rate-limiting
+
+Add user profiles, comments, likes
+
+🧑‍💻 Author
+
+Built by [Abhishek Mourya] 
+Available for freelance or full-time microservices and monolithic projects!
+
+📄 License
+
+MIT License — free to use and modify.
