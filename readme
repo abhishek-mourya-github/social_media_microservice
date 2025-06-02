@@ -1,214 +1,123 @@
-🌐 Social Media Microservices (Node.js)
+Social Media Microservices Project
 
-This project is a scalable social media platform built using a microservice architecture. Each service runs independently and communicates through REST APIs and optionally through RabbitMQ. The platform includes features such as authentication, post management, media uploads, rate limiting, validation, and logging.
+This is a Node.js-based social media microservices architecture. It includes the following services:
 
-🏗️ Tech Stack
+API Gateway (port: 3000)
 
-Node.js (JavaScript Runtime)
+Identity Service (port: 3001)
 
-Express.js (API Framework)
+Post Service (port: 3002)
 
-MongoDB with Mongoose (Database & ODM)
+Media Service (port: 3003)
 
-Cloudinary (Image Hosting)
+Each service is modular and communicates with each other over HTTP or via messaging (e.g., RabbitMQ). The architecture ensures scalability, maintainability, and separation of concerns.
 
-Multer (File Upload Handling)
+🛠️ Tech Stack
 
-Winston (Logging)
+Node.js, Express.js
 
-Argon2 & bcrypt (Password Hashing)
+MongoDB with Mongoose
 
-JWT (Authentication)
+JWT for authentication
 
-Rate Limiting:
+argon2, bcrypt for password hashing
 
-express-rate-limit
+Multer, Cloudinary for media uploads
 
-rate-limit-flexible
+Winston for logging
 
-Joi (Input Validation)
+Joi for input validation
 
-🧹 Microservices Overview
+rate-limit, rate-limit-express, rate-limit-flexible for rate limiting
 
-Service
+📦 Microservices Overview
 
-Description
+🔐 Identity Service (Port 3001)
 
-Port
+User registration & login
 
-API Gateway
+Password hashing (argon2 / bcrypt)
 
-Routes requests to microservices
+JWT authentication
 
-3000
+User model with MongoDB
 
-Identity Service
+📝 Post Service (Port 3002)
 
-Handles user registration & login
+Create, read, delete posts
 
-3001
+Connects with Media service to handle image/video
 
-Post Service
+On delete, communicates with media service and removes Cloudinary media
 
-Create, fetch, delete posts
+📷 Media Service (Port 3003)
 
-3002
+Handles file uploads via Multer
 
-Media Service
+Stores media in Cloudinary
 
-Upload and delete media (Cloudinary + DB)
+Provides media deletion feature
 
-3003
+Saves metadata in MongoDB
 
-📁 Folder Structure
+🌐 API Gateway (Port 3000)
 
-social-media-microservices/
+Routes requests to the appropriate microservices
+
+Central point for rate limiting, security headers, and logging
+
+Acts as a reverse proxy
+
+🧪 Common Utilities
+
+Logger: Winston-based logger used across services
+
+Validator: Joi schema for validating requests
+
+Auth Middleware: Validates JWT token in API Gateway
+
+Rate Limiters: Added via rate-limit, rate-limit-express, or rate-limit-flexible
+
+
+📂 Folder Structure
+
+/social-media-microservices
 │
-├── api-gateway/
-├── identity-service/
-├── post-service/
-├── media-service/
-└── README.md
+├── api-gateway
+│   └── server.js, middleware, utils
+│
+├── identity
+│   └── server.js, models, controllers, routes, database, utils, middleware
+│
+├── post
+│   └── server.js, models, controllers, routes, database, utils, middleware
+│
+├── media
+    └── server.js, models, controllers, routes, database, utils, middleware
 
-⚙️ Features
 
-✅ Authentication (Identity Service)
+🚀 Running Locally
 
-User signup/login
+Each service can be started independently:
+# Start API Gateway
+cd gateway && npm install && npm run dev
 
-Password hashing (Argon2 or bcrypt)
+# Start Identity Service
+cd identity && npm install && npm run dev
 
-JWT-based authentication
+# Start Post Service
+cd post && npm install && npm run dev
 
-Secure routes
+# Start Media Service
+cd media && npm install && npm run dev
 
-📝 Post Service
 
-Create, fetch, delete posts
+☁️ Deployment on Render
 
-Link posts with media
+1. Push each service as separate GitHub repos or in subfolders.
 
-Input validation using Joi
+2. Deploy each one as a separate Web Service on Render.
 
-🖼️ Media Service
+📜 License
 
-Upload files with Multer
-
-Store in RAM then upload to Cloudinary
-
-Save metadata to MongoDB
-
-Delete from Cloudinary when post is deleted
-
-🚦 Rate Limiting
-
-Use express-rate-limit for basic limits
-
-rate-limit-flexible for Redis or advanced cases
-
-📜 Logging
-
-Logs all events using Winston
-
-Error logging and request tracking
-
-🔐 Environment Variables (Sample)
-
-Each service should have its own .env file. Here's an example for the Media Service:
-
-PORT=3003
-MONGODB_URI=mongodb://localhost:27017/media-service
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-JWT_SECRET=your_jwt_secret
-
-🐳 Docker (Optional)
-
-You can dockerize each service using a simple Dockerfile like:
-
-FROM node:18
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-EXPOSE 3001
-CMD ["node", "server.js"]
-
-Then build and run using:
-
-docker build -t identity-service .
-docker run -p 3001:3001 identity-service
-
-🚀 Run Locally
-
-Clone the repo
-
-Run MongoDB (locally or via Atlas)
-
-Setup .env files for each service
-
-Start each service:
-
-# API Gateway
-cd api-gateway
-npm install
-node server.js  # runs on port 3000
-
-# Identity Service
-cd ../identity-service
-npm install
-node server.js  # runs on port 3001
-
-# Post Service
-cd ../post-service
-npm install
-node server.js  # runs on port 3002
-
-# Media Service
-cd ../media-service
-npm install
-node server.js  # runs on port 3003
-
-📬 Sample Endpoints
-
-Identity Service
-
-POST /register
-POST /login
-
-Post Service
-
-GET /posts
-POST /posts
-DELETE /posts/:id
-
-Media Service
-
-POST /upload (multipart/form-data, field: "file")
-DELETE /media/:id
-
-API Gateway
-
-Routes to respective services
-
-Use tools like:
-
-Postman
-
-📦 Future Improvements
-
-Add RabbitMQ for async operations (e.g., media cleanup)
-
-Add Redis for caching + rate-limiting
-
-Add user profiles, comments, likes
-
-🧑‍💻 Author
-
-Built by [Abhishek Mourya] 
-Available for freelance or full-time microservices and monolithic projects!
-
-📄 License
-
-MIT License — free to use and modify.
+MIT © 2025 Abhishek Mourya
